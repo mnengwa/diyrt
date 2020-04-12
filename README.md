@@ -10,6 +10,7 @@ The [Create React App CLI tool](https://reactjs.org/docs/create-a-new-react-app.
 
 ## 1. Introductions - what is this toolchain we speak of?
 Well, these are a set of tools ***La Di Da***, that would assist a programmer have a near painless development experience. In the case of React, these generally consist of:
+
 1. JavaScript package manager e.g **[NPM](https://www.npmjs.com)** | [YARN](https://yarnpkg.com)
 2. JavaScript build tools e.g **[Webpack](https://webpack.js.org)** | [Parcel](https://parceljs.org)
 3. JavaScript compiler e.g **[Babel](https://babeljs.io)** | [Traceur](https://github.com/google/traceur-compiler) 
@@ -57,6 +58,7 @@ We will be defining the organization of our project by setting up a folders to r
 
 3. ## Installing project dependancies
 As we shall be using NPM to manages our dependancies it is good to get acquinted with some of these useful commands:
+
 | Command                      | What it accomplishes                                                                     |
 |------------------------------|------------------------------------------------------------------------------------------|
 | 1. `npm init`                | Initializes an NPM project & sets up the base configurations                             |
@@ -117,6 +119,7 @@ After pasting the content into package.json, run the command `npm install` in th
 Okay, but why do we need it? The thing is, browser support for the latest specifications of JavaScript is not that great at all :unamused:. Furthermore browser engines vary alot in various ways. Just look at this [camparison table](https://caniuse.com/#comparison) from caniuse.com.
 
 So what Babel allows us to do is to write our programs using the most recent advancement in JavaScript(ES6+) which comes with various improvements e.g classes, fat arrows functions, compile it into JavaScript which would be supported by a vast majority of the browser engines out there. And below would be the babel dependancies to help with that:
+
 1. **[@babel/core](https://babeljs.io/docs/en/babel-core)**
 2. **[@babel/preset-env](https://babeljs.io/docs/en/babel-preset-env)**
 3. **[@babel/preset-react](https://babeljs.io/docs/en/babel-preset-react)**
@@ -155,6 +158,7 @@ The main advantage to this is:
 > Webpack takes the dependencies and generates a dependency graph allowing web developers to use a modular approach for their web application development.
 
 Here are the Webpack dependancies in play:
+
 | Dependency            | Documentation                                                   |
 |-----------------------|-----------------------------------------------------------------|
 | webpack               | [GitHub](https://github.com/webpack/webpack) page               |
@@ -165,6 +169,7 @@ Here are the Webpack dependancies in play:
 Inside the `build directory` is where we will put our webpack configuration files. We are goint to setup **loaders**, **rules**, and **plugins** among other settings to make our modular JS project come to live. Please visit the Webpack [documentation](https://webpack.js.org/concepts/) to make deeper sense of Webpack concepts including loaders, rules & plugins.
 
 We will be using the following loaders to handle different file types within our project:
+
 | Dependency        | Documentation                                                     |
 |-------------------|-------------------------------------------------------------------|
 | babel-loader      | [GitHub](https://github.com/babel/babel-loader) page              |
@@ -178,6 +183,7 @@ We will be using the following loaders to handle different file types within our
 | sass-loader       | [Github](https://github.com/webpack-contrib/sass-loader) page     |
 
 And here are the Webpack plugins we will apply in our project:
+
 | Dependency                 | Documentation                                                                |
 |----------------------------|------------------------------------------------------------------------------|
 | html-webpack-plugin        | [GitHub](https://github.com/jantimon/html-webpack-plugin) page               |
@@ -348,6 +354,7 @@ If you didn't get slapped with a load full of errors in your terminal kudos :thu
 
 ## 4. Using React
 It's time to use React UI library. Can I get a ***Whoop! Whoop!***? Let's go ahead and build a React application. The dependancies used for this segment are as follows:
+
 | Dependency   | Documentation                                                                            |
 |--------------|------------------------------------------------------------------------------------------|
 | React        | [GitHub](https://github.com/facebook/react) page                                         |
