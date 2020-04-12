@@ -114,7 +114,7 @@ After pasting the content into package.json, run the command `npm install` in th
 
 ## 3. Configuring Babel
 ***Babel is our JavaScript transcompiler of choice.*** 
-Okay, but why do we need it? The thing is, browser support for the latest specifications of JavaScript is not that great at all:unamused:. Furthermore browser engines vary alot in various ways. Just look at this [camparison table](https://caniuse.com/#comparison) from caniuse.com.
+Okay, but why do we need it? The thing is, browser support for the latest specifications of JavaScript is not that great at all :unamused:. Furthermore browser engines vary alot in various ways. Just look at this [camparison table](https://caniuse.com/#comparison) from caniuse.com.
 
 So what Babel allows us to do is to write our programs using the most recent advancement in JavaScript(ES6+) which comes with various improvements e.g classes, fat arrows functions, compile it into JavaScript which would be supported by a vast majority of the browser engines out there. And below would be the babel dependancies to help with that:
 1. **[@babel/core](https://babeljs.io/docs/en/babel-core)**
@@ -343,3 +343,198 @@ If we go back to the scripts section of our `package.json`, we see that it is ea
 Now try running the following in your project root:
 1. **`npm run debug`** ... to start the webpack development server
 2. **`npm run build`** ... to build the application
+
+If you didn't get slapped with a load full of errors in your terminal kudos :thumbsup:. If you did, try re-tracing your steps while combing through the errors: consider them learning mistakes that add more skill & knowledge :muscle: rather than signs that you should quite the journey.
+
+## 4. Using React
+It's time to use React UI library. Can I get a ***Whoop! Whoop!***? Let's go ahead and build a React application. The dependancies used for this segment are as follows:
+| Dependency   | Documentation                                                                            |
+|--------------|------------------------------------------------------------------------------------------|
+| React        | [GitHub](https://github.com/facebook/react) page                                         |
+| React DOM    | [GitHub](https://github.com/facebook/react/tree/master/packages/react-dom) page          |
+| React router | [Documentation](https://reacttraining.com/react-router/web/guides/quick-start) website   |
+
+The first thing we are going to do is create two pages for demonstration purposes: **home** and **about**.
+
+Copy the following content into Home.js:
+```javascript
+import React from 'react';
+
+import '@/pages/home/home.scss';
+
+export default () => {
+    return <div id="home-page">
+        <header>
+            DIRT - HOME
+        </header>
+    </div>;
+};
+```
+
+Copy the following into home.scss
+```css
+#home-page {
+    header {
+        font-size: 4rem;
+        color: #EC5f67;
+        text-align: center;
+        font-family: 'Fira Code', 'Courier New', Courier, monospace;
+        text-transform: capitalize;
+    }
+}
+```
+
+Copy the following into About.js:
+```javascript
+import React from 'react';
+
+import '@/pages/about/about.scss';
+
+export default () => {
+    return <div id="about-page">
+        <header>
+            ABOUT - DIRT
+        </header>
+    </div>;
+};
+```
+
+Copy the following into about.scss
+```css
+#about-page {
+    header {
+        font-size: 4rem;
+        color: #FAC863;
+        text-align: center;
+        font-family: 'Fira Code', 'Courier New', Courier, monospace;
+        text-transform: capitalize;
+    }
+}
+```
+
+We would then create a common navigation bar that would be shared with all our pages:
+
+Copy the following into **`src/components/app-bar/AppBar.js`**:
+```javascript
+import React from 'react';
+import {NavLink} from 'react-router-dom';
+
+import '@/components/app-bar/app-bar.scss';
+
+export default () => {
+    return <nav>
+        <NavLink to="/" className="nav-item" exact="true">HOME</NavLink>
+        <NavLink to="/about" className="nav-item" exact="true">ABOUT</NavLink>
+    </nav>;
+};
+```
+
+Copy the following into **`src/components/app-bar/app-bar.scss`**:
+```css
+nav {
+    display: flex;
+    padding: 1rem;
+    justify-content: center;
+
+    .nav-item {
+        color: #fff;
+        padding: 4px 8px;
+        text-decoration: none;
+        font-family: 'Montserrat', sans-serif;
+
+        &.active {
+            color: #99C794;
+        }
+    }
+}
+```
+
+Don't worry, we are almost done. Next up we wire up our page routes. We would want it such that if a users goes to `/about` or clicks the about link, they would get to see the about page contents. And so forth for all our pages.
+
+Let's declare the application routes by adding this code in **`src/routes/index.js`**:
+```javascript
+import React, { Suspense } from 'react';
+import {Switch, Route} from 'react-router-dom';
+
+import Loading from "@/pages/loading/Loading.js";
+const Home = React.lazy(() => import(/* webpackChunkName: "home" */ '@/pages/home/Home'));
+const About = React.lazy(() => import(/* webpackChunkName: "about" */ '@/pages/about/About'));
+
+export default () => {
+    return (
+        <Suspense fallback={<Loading/>}>
+            <Switch>
+                <Route path='/' exact={true}>
+                    <Home/>
+                </Route>
+                <Route path='/about'>
+                    <About/>
+                </Route>
+            </Switch>
+        </Suspense>
+    );
+};
+```
+
+> So what's happening here apart from declaring our page routes, is that we are code splitting our application based on routes. That is to mean that every page will load only what it need to exist(render), rather than load everything at once. We have archieved this through dynamic imports which is supported by our build tool - [Webpack](https://webpack.js.org/guides/code-splitting/), compiler - [Babel](https://babeljs.io/docs/en/babel-plugin-syntax-dynamic-import) & UI library [React](https://reactjs.org/docs/code-splitting.html#reactlazy).
+
+Copy the code below in the file **`src/app/App.js`**:
+```javascript
+import React from 'react';
+import {BrowserRouter} from 'react-router-dom';
+
+import Routes from '@/routes';
+import AppBar from '@/components/app-bar/AppBar';
+
+import '@/app/app.scss';
+function App() {
+    return <BrowserRouter>
+        <AppBar/>
+        <Routes/>  
+    </BrowserRouter>;
+}
+
+export default App;
+```
+
+Copy the content below that defines our application's skeleton file in **`assets/index.html`**:
+```html
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title><%= htmlWebpackPlugin.options.title %></title>
+    </head>
+    <body>
+        <div id="root"></div>
+        <noscript>
+        Enable JavaScript in your browser for a better experience
+        </noscript>
+    </body>
+</html>
+```
+
+Copy the following code into **`src/index.js`**:
+```javascript
+import React from "react";
+import ReactDOM from "react-dom";
+
+import App from "./App.js";
+ReactDOM.render(<App />, document.getElementById("root"));
+```
+This **injects our React application into our web page the (`DOM`)**. Keep in mind that our application only consists of a single HTML page and the content is rendered through our JavaScript code.
+
+Re-run the command **`npm run debug`** to start our development server. The server should be serving content at [http://localhost:3000](http://localhost:3000). Open this URL in your browser and it should take you to the home page. Navigate around the app try to pick things out.
+
+Finally re-run the command **`npm run build`** to build your production ready files. You will notice that a new folder named *`dist`* was created and there are files in it. 
+
+> This is the folder you should that your should host on a server capable of serving static files. e.g Apache, Ngix among others.
+
+<p align="center"> 
+And that's it folks.
+<br/>
+:tada: :tada: :tada:
+ - The End - 
+:confetti_ball: :confetti_ball: :confetti_ball:
+</p>
