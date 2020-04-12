@@ -24,7 +24,7 @@ We will be defining the organization of our project by setting up a folders to r
     + assets
         - index.html
     + build
-        - webpack.config.js
+        - webpack.common.js
         - webpack.prod.js
         - webpack.dev.js
     + src
@@ -147,3 +147,199 @@ Okay... that's col. But what is the range covered by this "spell"?
 + The last two version of the remaining browsers
 
 > Learn more about Babel configuration files [here](https://babeljs.io/docs/en/config-files) and browserslist [here](https://github.com/browserslist/browserslist)
+
+## 4. Setting up Webpack
+**Webpack** is a JavaScript module bundler - its main purpose is to bundle JavaScript files for usage in a browser, by taking modules with dependencies and generating static assets representing those modules.
+
+The main advantage to this is:
+> Webpack takes the dependencies and generates a dependency graph allowing web developers to use a modular approach for their web application development.
+
+Here are the Webpack dependancies in play:
+| Dependency            | Documentation                                                   |
+|-----------------------|-----------------------------------------------------------------|
+| webpack               | [GitHub](https://github.com/webpack/webpack) page               |
+| webpack-cli           | [GitHub](https://github.com/webpack/webpack-cli) page           |
+| webpack-dev-server    | [GitHub](https://github.com/webpack/webpack-dev-server) page    |
+| webpack-merge         | [GitHub](https://github.com/survivejs/webpack-merge) page       |
+
+Inside the `build directory` is where we will put our webpack configuration files. We are goint to setup **loaders**, **rules**, and **plugins** among other settings to make our modular JS project come to live. Please visit the Webpack [documentation](https://webpack.js.org/concepts/) to make deeper sense of Webpack concepts including loaders, rules & plugins.
+
+We will be using the following loaders to handle different file types within our project:
+| Dependency        | Documentation                                                     |
+|-------------------|-------------------------------------------------------------------|
+| babel-loader      | [GitHub](https://github.com/babel/babel-loader) page              |
+| file-loader       | [GitHub](https://github.com/webpack-contrib/file-loader) page     |
+| url-loader        | [GitHub](https://github.com/webpack-contrib/url-loader) page      |
+| style-loader      | [GitHub](https://github.com/webpack-contrib/style-loader) page    |
+| css-loader        | [GitHub](https://github.com/webpack-contrib/css-loader) page      |
+| postcss-loader    | [GitHub](https://github.com/postcss/postcss-loader) page          |
+| autoprefixer      | [GitHub](https://github.com/postcss/autoprefixer) page            |
+| node-sass         | [Github](https://github.com/sass/node-sass) page                  |
+| sass-loader       | [Github](https://github.com/webpack-contrib/sass-loader) page     |
+
+And here are the Webpack plugins we will apply in our project:
+| Dependency                 | Documentation                                                                |
+|----------------------------|------------------------------------------------------------------------------|
+| html-webpack-plugin        | [GitHub](https://github.com/jantimon/html-webpack-plugin) page               |
+| clean-webpack-plugin       | [GitHub](https://github.com/johnagan/clean-webpack-plugin) page              |
+| mini-css-extract-plugin    | [GitHub](https://github.com/webpack-contrib/mini-css-extract-plugin) page    |
+
+We will be splitting our configurations into three parts:
+1. Development configs in **`webpack.dev.js`**
+2. Production configs in **`webpack.prod.js`**
+3. Common configs in **`webpack.common.js`**
+
+Paste this code in your empty **`webpack.common.js`** file.
+```javascript
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
+const rootDir = path.resolve(__dirname, '..');
+
+module.exports = {
+    entry: {
+        app: rootDir + '/src/index.js',
+    },
+    module: {
+        rules: [
+            {
+                test: /\.(js|jsx)$/,
+                loader: 'babel-loader',
+                exclude: /node_modules/
+            },
+            {
+                test: /\.(png|jpg|gif|svg)$/i,
+                use: [
+                    {
+                        loader: 'url-loader',
+                        options: {
+                            limit: 8192,
+                        },
+                    },
+                ],
+            },
+            {
+                test: /\.(sa|sc|c)ss$/,
+                use: [
+                    {
+                        loader: 'style-loader',
+                    },
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                        options: {
+                            hmr: process.env.NODE_ENV === 'development',
+                        },
+                    },
+                    {
+                        loader: 'css-loader',
+                    },
+                    {
+                        loader: 'postcss-loader',
+                        options: {
+                            plugins: function() {
+                                return [
+                                    require('autoprefixer'),
+                                ];
+                            },
+                        },
+                    },
+                    {
+                        loader: 'sass-loader',
+                    },
+                ],
+            },
+        ],
+    },
+    resolve: {
+        alias: {
+            '#': rootDir + '/',
+            '@': rootDir + '/src/',
+        },
+        extensions: ['*', '.js', '.jsx'],
+    },
+    plugins: [
+        new HtmlWebpackPlugin({
+            minify: true,
+            title: 'zana',
+            template: rootDir + '/assets/index.html',
+        }),
+        new CleanWebpackPlugin()
+    ],
+};
+```
+
+Paste this code in your empty **`webpack.dev.js`** file.
+```javascript
+const path = require('path');
+const webpack = require('webpack');
+const merge = require('webpack-merge');
+const common = require('./webpack.config.js');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
+const rootDir = path.resolve(__dirname, '..');
+
+module.exports = merge(common, {
+    mode: 'development',
+    output: {
+        path: rootDir + '/dist/',
+        filename: '[name].js'
+    },
+    devtool: 'inline-source-map',
+    devServer: {
+        hot: true,
+        port: 3000,
+        stats: 'errors-only',
+        historyApiFallback: true,
+        contentBase: rootDir + '/assets/'
+    },
+    plugins: [
+        new MiniCssExtractPlugin({
+            ignoreOrder: false,
+            filename: '[name].css',
+            chunkFilename: '[id].css'
+        }),
+        new webpack.HotModuleReplacementPlugin()
+    ]
+});
+```
+
+Paste this code in your empty **`webpack.prod.js`** file.
+```javascript
+const path = require('path');
+const merge = require('webpack-merge');
+const common = require('./webpack.config.js');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
+const rootDir = path.resolve(__dirname, '..');
+
+module.exports = merge(common, {
+    mode: 'production',
+    output: {
+        path: rootDir + '/dist/',
+        filename: '[name].[hash].js'
+    },
+    plugins: [
+        new MiniCssExtractPlugin({
+            ignoreOrder: false,
+            filename: '[name].[hash].css',
+            chunkFilename: '[id].[hash].css',
+        }),
+    ]
+});
+```
+
+If we go back to the scripts section of our `package.json`, we see that it is easy to see the configs being used for their respective environments:
+```json
+"scripts": {
+    "build": "webpack --config build/webpack.prod.js",
+    "debug": "webpack-dev-server --config build/webpack.dev.js"
+},
+```
+
+> The **`--config`** flag tells webpack-cli what configuration to use.
+
+Now try running the following in your project root:
+1. **`npm run debug`** ... to start the webpack development server
+2. **`npm run build`** ... to build the application
