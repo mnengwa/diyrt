@@ -64,6 +64,7 @@ As we shall be using NPM to manages our dependancies it is good to get acquinted
 | 3. `npm i <package>`         | Installs the package given without storing the entry in the package.json file            |
 | 4. `npm i -S <package>`      | Installs the package specified and registers the package as a **core** dependancy        |
 | 5. `npm i -D <package>`      | Installs the package specified and registers the package as a **development** dependancy |
+| 6. `npm run <script>`        | Runs the script task as declared in the package.json file                                |
 
 Commands 2, 4 & 5 can be written more expressively as **`npm install`**, **`npm install <package> --save`** and **`npm install <package> --dev`** represectively.
 
@@ -111,3 +112,26 @@ Let's proceed to copy the following content into the `package.json` file in our 
 After pasting the content into package.json, run the command `npm install` in the root of the project. The command should begin installing the dependanies ASAP!.
 > The speed of installation is dependant on various factors such as: computer performance & connectivity speeds.
 
+## 3. Configuring Babel
+***Babel is our JavaScript transcompiler of choice.*** 
+Okay, but why do we need it? The thing is, browser support for the latest specifications of JavaScript is not that great at all:unamused:. Furthermore browser engines vary alot in various ways. Just look at this [camparison table](https://caniuse.com/#comparison) from caniuse.com.
+
+So what Babel allows us to do is to write our programs using the most recent advancement in JavaScript(ES6+) which comes with various improvements e.g classes, fat arrows functions, compile it into JavaScript which would be supported by a vast majority of the browser engines out there. And below would be the babel dependancies to help with that:
+1. **[@babel/core](https://babeljs.io/docs/en/babel-core)**
+2. **[@babel/preset-env](https://babeljs.io/docs/en/babel-preset-env)**
+3. **[@babel/preset-react](https://babeljs.io/docs/en/babel-preset-react)**
+4. **[@babel/plugin-syntax-dynamic-import](https://babeljs.io/docs/en/babel-plugin-syntax-dynamic-import)**
+
+Copy & paste this into **`.babelrc`**, which is our babel configuration file.
+```json
+{
+    "presets": [
+        "@babel/preset-env",
+        "@babel/preset-react"
+    ],
+    "plugins": [
+        "@babel/plugin-syntax-dynamic-import"
+    ]
+}
+```
+> Learn more about Babel configuration files [here](https://babeljs.io/docs/en/config-files)
