@@ -357,7 +357,7 @@ It's time to use React UI library. Can I get a ***Whoop! Whoop!***? Let's go ahe
 The first thing we are going to do is create two pages for demonstration purposes: **home** and **about**.
 
 Copy the following content into Home.js:
-```javascript
+```jsx
 import React from 'react';
 
 import '@/pages/home/home.scss';
@@ -372,7 +372,7 @@ export default () => {
 ```
 
 Copy the following into home.scss
-```css
+```scss
 #home-page {
     header {
         font-size: 4rem;
@@ -385,7 +385,7 @@ Copy the following into home.scss
 ```
 
 Copy the following into About.js:
-```javascript
+```jsx
 import React from 'react';
 
 import '@/pages/about/about.scss';
@@ -400,7 +400,7 @@ export default () => {
 ```
 
 Copy the following into about.scss
-```css
+```scss
 #about-page {
     header {
         font-size: 4rem;
@@ -415,7 +415,7 @@ Copy the following into about.scss
 We would then create a common navigation bar that would be shared with all our pages:
 
 Copy the following into **`src/components/app-bar/AppBar.js`**:
-```javascript
+```jsx
 import React from 'react';
 import {NavLink} from 'react-router-dom';
 
@@ -430,7 +430,7 @@ export default () => {
 ```
 
 Copy the following into **`src/components/app-bar/app-bar.scss`**:
-```css
+```scss
 nav {
     display: flex;
     padding: 1rem;
@@ -452,7 +452,7 @@ nav {
 Don't worry, we are almost done. Next up we wire up our page routes. We would want it such that if a users goes to `/about` or clicks the about link, they would get to see the about page contents. And so forth for all our pages.
 
 Let's declare the application routes by adding this code in **`src/routes/index.js`**:
-```javascript
+```jsx
 import React, { Suspense } from 'react';
 import {Switch, Route} from 'react-router-dom';
 
@@ -479,7 +479,7 @@ export default () => {
 > So what's happening here apart from declaring our page routes, is that we are code splitting our application based on routes. That is to mean that every page will load only what it need to exist(render), rather than load everything at once. We have archieved this through dynamic imports which is supported by our build tool - [Webpack](https://webpack.js.org/guides/code-splitting/), compiler - [Babel](https://babeljs.io/docs/en/babel-plugin-syntax-dynamic-import) & UI library [React](https://reactjs.org/docs/code-splitting.html#reactlazy).
 
 Copy the code below in the file **`src/app/App.js`**:
-```javascript
+```jsx
 import React from 'react';
 import {BrowserRouter} from 'react-router-dom';
 
@@ -516,7 +516,7 @@ Copy the content below that defines our application's skeleton file in **`assets
 ```
 
 Copy the following code into **`src/index.js`**:
-```javascript
+```jsx
 import React from "react";
 import ReactDOM from "react-dom";
 
