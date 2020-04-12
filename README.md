@@ -275,7 +275,7 @@ Paste this code in your empty **`webpack.dev.js`** file.
 const path = require('path');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
-const common = require('./webpack.config.js');
+const common = require('./webpack.common.js');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const rootDir = path.resolve(__dirname, '..');
@@ -309,7 +309,7 @@ Paste this code in your empty **`webpack.prod.js`** file.
 ```javascript
 const path = require('path');
 const merge = require('webpack-merge');
-const common = require('./webpack.config.js');
+const common = require('./webpack.common.js');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const rootDir = path.resolve(__dirname, '..');
