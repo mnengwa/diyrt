@@ -13,7 +13,8 @@ Well, these are a set of tools ***La Di Da***, that would assist a programmer ha
 
 1. JavaScript package manager e.g **[NPM](https://www.npmjs.com)** | [YARN](https://yarnpkg.com)
 2. JavaScript build tools e.g **[Webpack](https://webpack.js.org)** | [Parcel](https://parceljs.org)
-3. JavaScript compiler e.g **[Babel](https://babeljs.io)** | [Traceur](https://github.com/google/traceur-compiler) 
+3. JavaScript compiler e.g **[Babel](https://babeljs.io)** | [Traceur](https://github.com/google/traceur-compiler)
+
 > In this journey, we will utilize the ones in bold, as they are what would be considered ***industry standards***. May be in another reality they other alternatives are the ones leading the pack?  
 
 
