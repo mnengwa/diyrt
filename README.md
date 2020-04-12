@@ -498,7 +498,7 @@ export default App;
 ```
 
 Copy the content below that defines our application's skeleton file in **`assets/index.html`**:
-```html
+```ejs
 <!DOCTYPE html>
 <html>
     <head>
