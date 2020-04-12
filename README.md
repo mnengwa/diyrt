@@ -134,4 +134,16 @@ Copy & paste this into **`.babelrc`**, which is our babel configuration file.
     ]
 }
 ```
-> Learn more about Babel configuration files [here](https://babeljs.io/docs/en/config-files)
+
+We can also specificy the range of browsers we would want to target. Let's copy the following into **`.browserslist`**:
+```text
+> 1%
+IE 10
+last 2 versions
+```
+Okay... that's col. But what is the range covered by this "spell"?
++ Browsers with more than 1% coverage
++ Internet explorer 10 only
++ The last two version of the remaining browsers
+
+> Learn more about Babel configuration files [here](https://babeljs.io/docs/en/config-files) and browserslist [here](https://github.com/browserslist/browserslist)
