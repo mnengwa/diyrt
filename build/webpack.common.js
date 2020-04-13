@@ -80,7 +80,6 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             minify: true,
-            title: 'DIRT',
             template: rootDir + '/assets/index.html',
         }),
         new CleanWebpackPlugin()

@@ -31,24 +31,14 @@ We will be defining the organization of our project by setting up a folders to r
         - webpack.dev.js
     + src
         + app
+            - About.js
+            - about.scss
             - App.js
             - app.scss
-        + components
-            + app-bar
-                - AppBar.js
-                - app-bar.scss
-        + pages
-            + about
-                - About.js
-                - about.scss
-            + home
-                - Home.js
-                - home.scss
-            + landing
-                - Landing.js
-                - landing.scss
-        + routes
-            - index.js
+            - Home.js
+            - home.scss
+            - Landing.js
+            - landing.scss
         - index.js
     - .babelrc
     - .browserslistrc
@@ -74,9 +64,7 @@ Commands 2, 4 & 5 can be written more expressively as **`npm install`**, **`npm 
 Let's proceed to copy the following content into the `package.json` file in our project:
 ```json
 {
-    "name": "<project-name>",
-    "version": "0.0.0",
-    "license": "MIT",
+    "private": true,
     "main": "index.js",
     "scripts": {
         "build": "webpack --config build/webpack.prod.js",
@@ -324,14 +312,16 @@ const rootDir = path.resolve(__dirname, '..');
 module.exports = merge(common, {
     mode: 'production',
     output: {
+        publicPath: 'dist/',
         path: rootDir + '/dist/',
-        filename: '[name].[hash].js'
+        filename: 'js/[name].[hash].js',
+        chunkFilename: 'js/[name].[hash].js',
     },
     plugins: [
         new MiniCssExtractPlugin({
             ignoreOrder: false,
-            filename: '[name].[hash].css',
-            chunkFilename: '[id].[hash].css',
+            filename: 'css/[name].[hash].css',
+            chunkFilename: 'css/[name].[hash].css',
         }),
     ]
 });
@@ -368,7 +358,7 @@ Copy the following content into Home.js:
 ```jsx
 import React from 'react';
 
-import '@/pages/home/home.scss';
+import '@/app/home.scss';
 
 export default () => {
     return <div id="home-page">
@@ -396,7 +386,7 @@ Copy the following into About.js:
 ```jsx
 import React from 'react';
 
-import '@/pages/about/about.scss';
+import '@/app/about.scss';
 
 export default () => {
     return <div id="about-page">
@@ -420,25 +410,56 @@ Copy the following into about.scss
 }
 ```
 
-We would then create a common navigation bar that would be shared with all our pages:
-
-Copy the following into **`src/components/app-bar/AppBar.js`**:
+Copy the code below in the file **`src/app/App.js`**:
 ```jsx
-import React from 'react';
-import {NavLink} from 'react-router-dom';
+import React, { Suspense } from 'react';
+import { Switch, Route, NavLink, BrowserRouter } from 'react-router-dom';
 
-import '@/components/app-bar/app-bar.scss';
+import '@/app/app.scss';
+import Loading from '@/app/Loading';
+const Home = React.lazy(() => import(/* webpackChunkName: "home" */ '@/app/Home'));
+const About = React.lazy(() => import(/* webpackChunkName: "about" */ '@/app/About'));
 
-export default () => {
+function AppBar() {
     return <nav>
-        <NavLink to="/" className="nav-item" exact="true">HOME</NavLink>
-        <NavLink to="/about" className="nav-item" exact="true">ABOUT</NavLink>
+        <NavLink to="/" className="nav-item" exact={true}>HOME</NavLink>
+        <NavLink to="/about" className="nav-item" exact={true}>ABOUT</NavLink>
     </nav>;
-};
+}
+
+function App() {
+    return <BrowserRouter>
+        <AppBar/>
+        <Suspense fallback={<Loading/>}>
+            <Switch>
+                <Route path='/' exact={true}>
+                    <Home/>
+                </Route>
+                <Route path='/about'>
+                    <About/>
+                </Route>
+            </Switch>
+        </Suspense>
+    </BrowserRouter>;
+}
+
+export default App;
 ```
 
-Copy the following into **`src/components/app-bar/app-bar.scss`**:
+Copy the code below in the file **`src/app/app.scss`**:
 ```scss
+@import url('https://fonts.googleapis.com/css?family=Fira+Code|Montserrat&display=swap');
+
+body {
+    margin: 0;
+    border: 0;
+    padding: 0;
+    width: 100%;
+    height: 100vh;
+    font-size: 16px;
+    background-color: #1B2B34;
+}
+
 nav {
     display: flex;
     padding: 1rem;
@@ -459,51 +480,7 @@ nav {
 
 Don't worry, we are almost done. Next up we wire up our page routes. We would want it such that if a users goes to `/about` or clicks the about link, they would get to see the about page contents. And so forth for all our pages.
 
-Let's declare the application routes by adding this code in **`src/routes/index.js`**:
-```jsx
-import React, { Suspense } from 'react';
-import {Switch, Route} from 'react-router-dom';
-
-import Loading from "@/pages/loading/Loading.js";
-const Home = React.lazy(() => import(/* webpackChunkName: "home" */ '@/pages/home/Home'));
-const About = React.lazy(() => import(/* webpackChunkName: "about" */ '@/pages/about/About'));
-
-export default () => {
-    return (
-        <Suspense fallback={<Loading/>}>
-            <Switch>
-                <Route path='/' exact={true}>
-                    <Home/>
-                </Route>
-                <Route path='/about'>
-                    <About/>
-                </Route>
-            </Switch>
-        </Suspense>
-    );
-};
-```
-
 > So what's happening here apart from declaring our page routes, is that we are code splitting our application based on routes. That is to mean that every page will load only what it need to exist(render), rather than load everything at once. We have archieved this through dynamic imports which is supported by our build tool - [Webpack](https://webpack.js.org/guides/code-splitting/), compiler - [Babel](https://babeljs.io/docs/en/babel-plugin-syntax-dynamic-import) & UI library [React](https://reactjs.org/docs/code-splitting.html#reactlazy).
-
-Copy the code below in the file **`src/app/App.js`**:
-```jsx
-import React from 'react';
-import {BrowserRouter} from 'react-router-dom';
-
-import Routes from '@/routes';
-import AppBar from '@/components/app-bar/AppBar';
-
-import '@/app/app.scss';
-function App() {
-    return <BrowserRouter>
-        <AppBar/>
-        <Routes/>  
-    </BrowserRouter>;
-}
-
-export default App;
-```
 
 Copy the content below that defines our application's skeleton file in **`assets/index.html`**:
 ```ejs
