@@ -10,14 +10,14 @@ module.exports = merge(common, {
     output: {
         publicPath: 'dist/',
         path: rootDir + '/dist/',
-        filename: '[name].[hash].js',
-        chunkFilename: '[name].[hash].js',
+        filename: 'js/[name].[hash].js',
+        chunkFilename: 'js/[name].[hash].js',
     },
     plugins: [
         new MiniCssExtractPlugin({
             ignoreOrder: false,
-            filename: '[name].[hash].css',
-            chunkFilename: '[name].[hash].css',
+            filename: 'css/[name].[hash].css',
+            chunkFilename: 'css/[name].[hash].css',
         }),
     ]
 });

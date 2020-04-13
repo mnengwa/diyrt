@@ -1,6 +1,6 @@
 import React from 'react';
 
-import '@/pages/loading/loading.scss';
+import '@/app/loading.scss';
 
 export default () => {
     return <div id="loading-page">

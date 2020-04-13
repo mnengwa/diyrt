@@ -1,11 +1,11 @@
 import React from 'react';
 
-import '@/pages/home/home.scss';
+import '@/app/about.scss';
 
 export default () => {
-    return <div id="home-page">
+    return <div id="about-page">
         <header>
-            DIRT - HOME
+            ABOUT - DIRT
         </header>
     </div>;
 };
