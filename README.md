@@ -257,7 +257,6 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             minify: true,
-            title: 'zana',
             template: rootDir + '/assets/index.html',
         }),
         new CleanWebpackPlugin()
